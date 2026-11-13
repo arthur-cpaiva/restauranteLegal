@@ -21,9 +21,16 @@ class Database
         try {
             $this->conexao = new PDO($dsn, $this->user, $this->pwd);
             $this->conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo 'Conectou';
-        } catch (\Exception $e) {
-            echo 'Erro' . $e->getmessage();
+        } catch (\PDOException $e) {
+            return json_encode(
+                ["Erro" => "Não foi possível conectar ao banco de dados. " . $e->getMessage()],
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+            );
+        } catch (\Throwable $th) {
+            return json_encode(
+                ["Erro" => "O programa apresentou um erro genérico. " . $th->getMessage()],
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+            );
         }
     }
 }
